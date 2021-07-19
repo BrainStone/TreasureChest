@@ -9,29 +9,36 @@ import org.bukkit.OfflinePlayer;
 import com.mtihc.minecraft.treasurechest.v8.util.commands.CommandException;
 
 public final class BukkitUtil {
-	
-	public static OfflinePlayer findOfflinePlayer(@Nonnull String playerName) throws CommandException {
+
+	@Nonnull
+	public static OfflinePlayer findOfflinePlayer(@Nonnull String playerName)
+			throws CommandException {
 		OfflinePlayer p = null;
 		OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
+
 		for (OfflinePlayer offlinePlayer : offlinePlayers) {
 			if (offlinePlayer.getName().equalsIgnoreCase(playerName)) {
 				if (p != null) {
-					throw new CommandException("Found multiple players named \"" + playerName + "\". Try using a UUID instead.");
+					throw new CommandException(
+							"Found multiple players named \"" + playerName + "\". Try using a UUID instead.");
 				}
 				p = offlinePlayer;
 			}
 		}
-		if (p == null || !p.hasPlayedBefore()) {
+
+		if ((p == null) || !(p.isOnline() || p.hasPlayedBefore())) {
 			try {
 				UUID uuid = UUID.fromString(playerName);
 				p = Bukkit.getOfflinePlayer(uuid);
 			} catch (IllegalArgumentException e) {
-				throw new CommandException("Invalid UUID format \""+playerName+"\"");
+				throw new CommandException("Invalid UUID format \"" + playerName + "\"");
 			}
 		}
-		if (p == null || !p.hasPlayedBefore()) {
-			throw new CommandException ("Player \""+playerName+"\" does not exist.");
+
+		if (!(p.isOnline() || p.hasPlayedBefore())) {
+			throw new CommandException("Player \"" + playerName + "\" does not exist.");
 		}
+
 		return p;
 	}
 }
