@@ -121,9 +121,6 @@ public class TreasureChestCommand extends SimpleCommand {
 
 		OfflinePlayer player = BukkitUtil.findOfflinePlayer(playerName);
 		playerName = player.getName();
-		if(player == null || !player.hasPlayedBefore()) {
-			throw new CommandException("Player \"" + playerName + "\" does not exist.");
-		}
 
 		boolean other = !sender.getName().equalsIgnoreCase(playerName);
 		if (other && !sender.hasPermission(Permission.COUNT_OTHERS.getNode())) {
@@ -748,22 +745,19 @@ public class TreasureChestCommand extends SimpleCommand {
 		if(!sender.hasPermission(Permission.FORGET.getNode())) {
 			throw new CommandException("You don't have permission to make a treasure forget that you've found it.");
 		}
-		
-		
+
+		OfflinePlayer p = BukkitUtil.findOfflinePlayer(playerName);
+		playerName = p.getName();
+
 		boolean other = !sender.getName().equalsIgnoreCase(playerName);
-		if(other && !sender.hasPermission(Permission.FORGET_OTHERS.getNode())) {
-			throw new CommandException("You don't have permission to make a treasure forget that a player has found it.");
+		if (other && !sender.hasPermission(Permission.COUNT_OTHERS.getNode())) {
+			throw new CommandException(
+					"You don't have permission to see how many treasures other players have found.");
 		}
-		
-		OfflinePlayer p = null;
-		p = BukkitUtil.findOfflinePlayer(playerName);
-		if(p == null || !p.hasPlayedBefore()) {
-			throw new CommandException("Player \"" + playerName + "\" does not exist.");
-		}
-		
+
 		Player player = (Player) sender;
 		Block block = TreasureManager.getTargetedContainerBlock(player);
-		if(block == null) {
+		if (block == null) {
 			throw new CommandException("You're not looking at a container block.");
 		}
 		

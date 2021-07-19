@@ -192,10 +192,6 @@ public class GroupCommand extends SimpleCommand {
 		try {
 			playerName = args[1];
 			p = BukkitUtil.findOfflinePlayer(playerName);
-			
-			if (p == null || !p.hasPlayedBefore()) {
-				throw new CommandException ("Player \""+playerName+"\" does not exist.");
-			}
 			playerName = p.getName();
 		}
 		catch(IndexOutOfBoundsException e) {
