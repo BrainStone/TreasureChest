@@ -188,11 +188,13 @@ public class TreasureChest implements ITreasureChest {
 
 	@Override
 	public String getName() {
-		return name;
+		return (name == null) ? null : ChatColor.translateAlternateColorCodes('&', name);
 	}
 
 	@Override
 	public String getNameWithFallback() {
+		String name = getName();
+
 		if (name == null) {
 			Location loc = container.getLocation();
 
