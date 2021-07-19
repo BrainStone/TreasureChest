@@ -196,7 +196,8 @@ public class TreasureChest implements ITreasureChest {
 					+ ChatColor.GRAY + " z " + ChatColor.WHITE
 					+ loc.getBlockZ();
 		} else {
-			return name;
+			// Sort named ones higher
+			return ChatColor.WHITE.toString() + ChatColor.WHITE + name;
 		}
 	}
 

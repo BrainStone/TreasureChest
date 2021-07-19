@@ -1,7 +1,12 @@
 package com.mtihc.minecraft.treasurechest.v8.plugin;
 
+import com.google.common.collect.Comparators;
 import java.util.Collection;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -264,8 +269,13 @@ public class TreasureChestCommand extends SimpleCommand {
 		}
 		
 		Player player = (Player) sender;
-	
-		Collection<Location> allChests = manager.getTreasureLocations(player.getWorld().getName());
+
+		List<ITreasureChest> allChests = manager.getTreasureLocations(player.getWorld().getName())
+				.stream().filter(
+						Objects::nonNull).map(manager::getTreasure)
+				.sorted(Comparator.comparing(ITreasureChest::getName, String.CASE_INSENSITIVE_ORDER))
+				.collect(
+						Collectors.toList());
 	
 		int total = allChests.size();
 		int totalPerPage = 10;
@@ -285,12 +295,11 @@ public class TreasureChestCommand extends SimpleCommand {
 			sender.sendMessage(ChatColor.GOLD
 					+ "List of all treasures on this server (page " + page + "/" + pageTotal
 					+ "):");
-			Location[] idArray = allChests.toArray(new Location[total]);
 			int startIndex = (page - 1) * totalPerPage;
 			int endIndex = startIndex + totalPerPage;
-			for (int i = startIndex; i < idArray.length && i < endIndex; i++) {
-				Location loc = idArray[i];
-				ITreasureChest chest = manager.getTreasure(loc);
+			
+			for (int i = startIndex; i < total && i < endIndex; i++) {
+				ITreasureChest chest = allChests.get(i);
 				if (chest == null) {
 					continue;
 				}
