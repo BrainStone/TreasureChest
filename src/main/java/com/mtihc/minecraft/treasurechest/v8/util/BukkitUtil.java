@@ -1,6 +1,7 @@
 package com.mtihc.minecraft.treasurechest.v8.util;
 
 import java.util.UUID;
+import javax.annotation.Nonnull;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -9,11 +10,11 @@ import com.mtihc.minecraft.treasurechest.v8.util.commands.CommandException;
 
 public final class BukkitUtil {
 	
-	public static OfflinePlayer findOfflinePlayer(String playerName) throws CommandException {
+	public static OfflinePlayer findOfflinePlayer(@Nonnull String playerName) throws CommandException {
 		OfflinePlayer p = null;
 		OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
 		for (OfflinePlayer offlinePlayer : offlinePlayers) {
-			if (offlinePlayer.getName().toLowerCase() == playerName.toLowerCase()) {
+			if (offlinePlayer.getName().equalsIgnoreCase(playerName)) {
 				if (p != null) {
 					throw new CommandException("Found multiple players named \"" + playerName + "\". Try using a UUID instead.");
 				}
