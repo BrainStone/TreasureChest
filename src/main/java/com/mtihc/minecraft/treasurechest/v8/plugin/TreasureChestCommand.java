@@ -120,16 +120,16 @@ public class TreasureChestCommand extends SimpleCommand {
 		} catch(Exception e) {
 			playerName = sender.getName();
 		}
-		
+
+		OfflinePlayer player = BukkitUtil.findOfflinePlayer(playerName);
+		playerName = player.getName();
+		if(player == null || !player.hasPlayedBefore()) {
+			throw new CommandException("Player \"" + playerName + "\" does not exist.");
+		}
+
 		boolean other = !sender.getName().equalsIgnoreCase(playerName);
 		if(other && !sender.hasPermission(Permission.COUNT_OTHERS.getNode())) {
 			throw new CommandException("You don't have permission to see how many treasures other players have found.");
-		}
-		
-		OfflinePlayer player = null;
-		player = BukkitUtil.findOfflinePlayer(playerName);
-		if(player == null || !player.hasPlayedBefore()) {
-			throw new CommandException("Player \"" + playerName + "\" does not exist.");
 		}
 		
 		World world;
