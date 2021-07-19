@@ -412,12 +412,24 @@ public class TreasureManager extends TreasureDataFacade {
 			if (lookupOnly) {
 				return null;
 			}
+
+			String treasureName = tchest.getName();
+
 			// create new Inventory
-			if(holder instanceof DoubleChest) {
-				inventory = plugin.getServer().createInventory(holder, holder.getInventory().getSize());
-			}
-			else {
-				inventory = plugin.getServer().createInventory(holder, holder.getInventory().getType());
+			if (holder instanceof DoubleChest) {
+				if (treasureName == null) {
+					inventory = plugin.getServer().createInventory(holder, holder.getInventory().getSize());
+				} else {
+					inventory = plugin.getServer()
+							.createInventory(holder, holder.getInventory().getSize(), treasureName);
+				}
+			} else {
+				if (treasureName == null) {
+					inventory = plugin.getServer().createInventory(holder, holder.getInventory().getType());
+				} else {
+					inventory = plugin.getServer()
+							.createInventory(holder, holder.getInventory().getType(), treasureName);
+				}
 			}
 			
 			// wrap inventory in an object that will clear itself from memory

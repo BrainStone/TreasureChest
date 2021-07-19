@@ -273,7 +273,8 @@ public class TreasureChestCommand extends SimpleCommand {
 		List<ITreasureChest> allChests = manager.getTreasureLocations(player.getWorld().getName())
 				.stream().filter(
 						Objects::nonNull).map(manager::getTreasure)
-				.sorted(Comparator.comparing(ITreasureChest::getName, NumberAwareStringComparator.INSTANCE))
+				.sorted(Comparator
+						.comparing(ITreasureChest::getNameWithFallback, NumberAwareStringComparator.INSTANCE))
 				.collect(
 						Collectors.toList());
 	
@@ -305,7 +306,7 @@ public class TreasureChestCommand extends SimpleCommand {
 				}
 				
 				// send name
-				sender.sendMessage("  " + ChatColor.GOLD + (i + 1) + ". " + chest.getName());
+				sender.sendMessage("  " + ChatColor.GOLD + (i + 1) + ". " + chest.getNameWithFallback());
 			}
 	
 			if(pageTotal > 1) {

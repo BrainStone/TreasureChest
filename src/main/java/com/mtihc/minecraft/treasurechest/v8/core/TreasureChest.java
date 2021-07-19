@@ -188,6 +188,11 @@ public class TreasureChest implements ITreasureChest {
 
 	@Override
 	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getNameWithFallback() {
 		if (name == null) {
 			Location loc = container.getLocation();
 

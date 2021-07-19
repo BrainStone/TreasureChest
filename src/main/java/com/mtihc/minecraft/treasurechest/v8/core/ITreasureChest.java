@@ -28,10 +28,16 @@ public interface ITreasureChest extends ConfigurationSerializable {
 	}
 
 	/**
+	 * Returns the name of the treasure.
+	 * @return the name of the treasure.
+	 */
+	@Nullable public String getName();
+
+	/**
 	 * Returns the name of the treasure, or the coordinates if it's not set.
 	 * @return the name of the treasure.
 	 */
-	public String getName();
+	public String getNameWithFallback();
 
 	/**
 	 * Sets the name of the treasure. Can be null
