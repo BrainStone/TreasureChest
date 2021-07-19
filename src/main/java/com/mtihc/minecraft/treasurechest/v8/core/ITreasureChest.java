@@ -2,6 +2,7 @@ package com.mtihc.minecraft.treasurechest.v8.core;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import com.mtihc.minecraft.treasurechest.v8.rewardfactory.RewardInfo;
@@ -25,6 +26,18 @@ public interface ITreasureChest extends ConfigurationSerializable {
 		FOUND_ALREADY,
 		UNLIMITED;
 	}
+
+	/**
+	 * Returns the name of the treasure, or the coordinates if it's not set.
+	 * @return the name of the treasure.
+	 */
+	public String getName();
+
+	/**
+	 * Sets the name of the treasure. Can be null
+	 * @param name the new name of the treasure
+	 */
+	public void setName(@Nullable String name);
 	
 	/**
 	 * Returns the interface that represents the actual block and inventory holder

@@ -7,7 +7,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.inventory.DoubleChestInventory;
@@ -26,7 +29,7 @@ import com.mtihc.minecraft.treasurechest.v8.rewardfactory.RewardInfo;
 public class TreasureChest implements ITreasureChest {
 
 	
-	
+	private String name;
 	private IBlockInventory container;
 	private final Map<Message, String> messages = new HashMap<Message, String>();
 	private boolean unlimited;
@@ -46,6 +49,8 @@ public class TreasureChest implements ITreasureChest {
 	 * 										an instance of InventoryHolder.
 	 */
 	public TreasureChest(BlockState blockState) throws IllegalArgumentException {
+		name = null;
+		
 		if(!(blockState instanceof InventoryHolder)) {
 			throw new IllegalArgumentException("Parameter blockState must be an InventoryHolder.");
 		}
@@ -72,7 +77,8 @@ public class TreasureChest implements ITreasureChest {
 	 * @param values all serialized values
 	 */
 	public TreasureChest(Map<String, Object> values) {
-		
+
+		name = (String) values.get("name");
 		container = (IBlockInventory) values.get("container");
 		
 		Map<?, ?> msgSection = (Map<?, ?>) values.get("messages");
@@ -153,6 +159,7 @@ public class TreasureChest implements ITreasureChest {
 	public Map<String, Object> serialize() {
 		Map<String, Object> values = new LinkedHashMap<String, Object>();
 		
+		if (name != null) values.put("name", name);
 		values.put("container", container);
 		
 		Map<String, Object> msgSection = new LinkedHashMap<String, Object>();
@@ -177,6 +184,25 @@ public class TreasureChest implements ITreasureChest {
 		values.put("rewards", rewardSection);
 		
 		return values;
+	}
+
+	@Override
+	public String getName() {
+		if (name == null) {
+			Location loc = container.getLocation();
+
+			return ChatColor.WHITE + loc.getWorld().getName() + ChatColor.GRAY + " x " + ChatColor.WHITE
+					+ loc.getBlockX() + ChatColor.GRAY + " y " + ChatColor.WHITE + loc.getBlockY()
+					+ ChatColor.GRAY + " z " + ChatColor.WHITE
+					+ loc.getBlockZ();
+		} else {
+			return name;
+		}
+	}
+
+	@Override
+	public void setName(@Nullable String name) {
+		this.name = name;
 	}
 
 	@Override

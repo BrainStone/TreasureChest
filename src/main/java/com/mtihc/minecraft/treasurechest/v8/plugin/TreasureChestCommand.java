@@ -295,11 +295,8 @@ public class TreasureChestCommand extends SimpleCommand {
 					continue;
 				}
 				
-				// send coordinates
-				sender.sendMessage("  " + ChatColor.GOLD + (i + 1) + ". "
-						+ ChatColor.WHITE + loc.getWorld().getName() + ChatColor.GRAY + " x " + ChatColor.WHITE 
-						+ loc.getBlockX() + ChatColor.GRAY + " y " + ChatColor.WHITE + loc.getBlockY() + ChatColor.GRAY + " z " + ChatColor.WHITE
-						+ loc.getBlockZ());
+				// send name
+				sender.sendMessage("  " + ChatColor.GOLD + (i + 1) + ". " + chest.getName());
 			}
 	
 			if(pageTotal > 1) {
