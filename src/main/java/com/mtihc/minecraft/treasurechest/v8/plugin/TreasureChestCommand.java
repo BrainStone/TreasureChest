@@ -1,8 +1,6 @@
 package com.mtihc.minecraft.treasurechest.v8.plugin;
 
-import com.google.common.collect.Comparators;
 import java.util.Collection;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +21,7 @@ import com.mtihc.minecraft.treasurechest.v8.core.TreasureException;
 import com.mtihc.minecraft.treasurechest.v8.core.TreasureManager;
 import com.mtihc.minecraft.treasurechest.v8.rewardfactory.RewardFactoryManager;
 import com.mtihc.minecraft.treasurechest.v8.util.BukkitUtil;
+import com.mtihc.minecraft.treasurechest.v8.util.NumberAwareStringComparator;
 import com.mtihc.minecraft.treasurechest.v8.util.commands.Command;
 import com.mtihc.minecraft.treasurechest.v8.util.commands.CommandException;
 import com.mtihc.minecraft.treasurechest.v8.util.commands.ICommand;
@@ -273,7 +272,7 @@ public class TreasureChestCommand extends SimpleCommand {
 		List<ITreasureChest> allChests = manager.getTreasureLocations(player.getWorld().getName())
 				.stream().filter(
 						Objects::nonNull).map(manager::getTreasure)
-				.sorted(Comparator.comparing(ITreasureChest::getName, String.CASE_INSENSITIVE_ORDER))
+				.sorted(Comparator.comparing(ITreasureChest::getName, NumberAwareStringComparator.INSTANCE))
 				.collect(
 						Collectors.toList());
 	

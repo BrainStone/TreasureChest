@@ -191,13 +191,13 @@ public class TreasureChest implements ITreasureChest {
 		if (name == null) {
 			Location loc = container.getLocation();
 
-			return ChatColor.WHITE + loc.getWorld().getName() + ChatColor.GRAY + " x " + ChatColor.WHITE
-					+ loc.getBlockX() + ChatColor.GRAY + " y " + ChatColor.WHITE + loc.getBlockY()
-					+ ChatColor.GRAY + " z " + ChatColor.WHITE
-					+ loc.getBlockZ();
+			// Two times white to sort these lower
+			return ChatColor.WHITE.toString() + ChatColor.WHITE + loc.getWorld().getName()
+					+ ChatColor.GRAY + " x " + ChatColor.WHITE + loc.getBlockX() + ChatColor.GRAY + " y "
+					+ ChatColor.WHITE + loc.getBlockY() + ChatColor.GRAY + " z " + ChatColor.WHITE + loc
+					.getBlockZ();
 		} else {
-			// Sort named ones higher
-			return ChatColor.WHITE.toString() + ChatColor.WHITE + name;
+			return ChatColor.WHITE + name;
 		}
 	}
 
