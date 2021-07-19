@@ -165,74 +165,67 @@ public class TreasureChestCommand extends SimpleCommand {
 		
 		
 	}
-	
-	@Command(aliases = { "list" }, args = "[page]", desc = "List treasures you've found.", help = { "" })
+
+	@Command(aliases = {"list"}, args = "[page]", desc = "List treasures you've found.", help = {""})
 	public void list(CommandSender sender, String[] args) throws CommandException {
-	
+
 		if (!(sender instanceof Player)) {
 			sender.sendMessage("This command must be executed by a player, in game.");
 			return;
 		}
-	
+
 		if (args.length > 1) {
 			sender.sendMessage(ChatColor.RED
 					+ "Expected only the optional page number.");
 			sender.sendMessage(getUsage());
 			return;
 		}
-	
-	
-		if(!sender.hasPermission(Permission.LIST.getNode())) {
+
+		if (!sender.hasPermission(Permission.LIST.getNode())) {
 			throw new CommandException("You don't have permission to list all treasures you've found.");
 		}
-		
-	
+
 		int page;
 		try {
 			page = Integer.parseInt(args[0]);
 		} catch (Exception e) {
 			page = 1;
 		}
-	
+
 		Player player = (Player) sender;
-		
-		Collection<Location> found = manager.getAllPlayerFound(player, player.getWorld());
-	
+
+		List<ITreasureChest> found = manager.getAllPlayerFound(player, player.getWorld())
+				.stream().filter(
+						Objects::nonNull).map(manager::getTreasure)
+				.sorted(Comparator
+						.comparing(ITreasureChest::getNameWithFallback, NumberAwareStringComparator.INSTANCE))
+				.collect(
+						Collectors.toList());
+
 		int total = found.size();
 		int totalPerPage = 10;
 		int pageTotal = total / totalPerPage + 1;
-	
+
 		if (page < 1 || page > pageTotal) {
-			throw new CommandException("Page " + page
-					+ " does not exist.");
+			throw new CommandException("Page " + page + " does not exist.");
 		}
-	
-		sender.sendMessage(ChatColor.GOLD
-				+ "List of all found treasures (page " + page + "/" + pageTotal
-				+ "):");
-	
+
 		if (found == null || found.isEmpty()) {
-			sender.sendMessage(ChatColor.RED
-					+ "You have not found any treasures yet.");
+			sender.sendMessage(ChatColor.RED + "You have not found any treasures yet.");
 		} else {
-	
-			Location[] idArray = found.toArray(new Location[total]);
+			sender.sendMessage(
+					ChatColor.GOLD + "List of all found treasures (page " + page + "/" + pageTotal + "):");
 			int startIndex = (page - 1) * totalPerPage;
 			int endIndex = startIndex + totalPerPage;
-			for (int i = startIndex; i < idArray.length && i < endIndex; i++) {
-				Location loc = idArray[i];
-				ITreasureChest chest = manager.getTreasure(loc);
-				if (chest == null) {
-					continue;
-				}
-				// send coordinates
-				sender.sendMessage("  " + ChatColor.GOLD + (i + 1) + ". "
-						+ ChatColor.WHITE + loc.getWorld().getName() + ChatColor.GRAY + " x " + ChatColor.WHITE 
-						+ loc.getBlockX() + ChatColor.GRAY + " y " + ChatColor.WHITE + loc.getBlockY() + ChatColor.GRAY + " z " + ChatColor.WHITE
-						+ loc.getBlockZ());
+
+			for (int i = startIndex; i < total && i < endIndex; i++) {
+				ITreasureChest chest = found.get(i);
+
+				// send name
+				sender.sendMessage("  " + ChatColor.GOLD + (i + 1) + ". " + chest.getNameWithFallback());
 			}
-	
-			if(pageTotal > 1) {
+
+			if (pageTotal > 1) {
 				int nextPage = (page == pageTotal ? 1 : page + 1);
 				sender.sendMessage(ChatColor.GOLD + "To see the next page, type: "
 						+ ChatColor.WHITE
@@ -301,9 +294,6 @@ public class TreasureChestCommand extends SimpleCommand {
 			
 			for (int i = startIndex; i < total && i < endIndex; i++) {
 				ITreasureChest chest = allChests.get(i);
-				if (chest == null) {
-					continue;
-				}
 				
 				// send name
 				sender.sendMessage("  " + ChatColor.GOLD + (i + 1) + ". " + chest.getNameWithFallback());
