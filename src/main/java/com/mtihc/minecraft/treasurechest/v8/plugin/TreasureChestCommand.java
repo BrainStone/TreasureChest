@@ -46,6 +46,7 @@ public class TreasureChestCommand extends SimpleCommand {
 		addNested("unlimited");
 		addNested("ignoreProtection");
 		addNested("setmessage");
+		addNested("setname");
 		addNested("setforget");
 		addNested("forget");
 		addNested("forgetAll");
@@ -634,6 +635,45 @@ public class TreasureChestCommand extends SimpleCommand {
 		else {
 			sender.sendMessage(ChatColor.GOLD + "Treasure message changed.");
 		}
+		manager.setTreasure(tchest);
+	}
+
+	@Command(aliases = { "setname", "name" }, args = "[name]", desc = "Set name", help = { "Specify a name for the treasure chest", "If you specify no name, the name will be removed" })
+	public void setname(CommandSender sender, String[] args) throws CommandException {
+
+		if(!(sender instanceof Player)) {
+			throw new CommandException("Command must be executed by a player, in game.");
+		}
+
+
+		if(!sender.hasPermission(Permission.SET.getNode())) {
+			throw new CommandException("You don't have permission to edit a treasure's name.");
+		}
+
+
+		Player player = (Player) sender;
+		Block block = TreasureManager.getTargetedContainerBlock(player);
+		if(block == null) {
+			throw new CommandException("You're not looking at a container block.");
+		}
+
+		Location loc = TreasureManager.getLocation((InventoryHolder) block.getState());
+
+		ITreasureChest tchest = manager.getTreasure(loc);
+
+		if (tchest == null) {
+			throw new CommandException("You're not looking at a treasure.");
+		}
+
+		String name = (args.length > 0) ? String.join(" ", args) : null;
+		tchest.setName(name);
+
+		if (name == null) {
+			sender.sendMessage(ChatColor.GOLD + "Treasure name cleared.");
+		} else {
+			sender.sendMessage(ChatColor.GOLD + "Treasure name changed.");
+		}
+
 		manager.setTreasure(tchest);
 	}
 	
