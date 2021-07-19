@@ -17,7 +17,7 @@ public final class BukkitUtil {
 		OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
 
 		for (OfflinePlayer offlinePlayer : offlinePlayers) {
-			if (offlinePlayer.getName().equalsIgnoreCase(playerName)) {
+			if (playerName.equalsIgnoreCase(offlinePlayer.getName())) {
 				if (p != null) {
 					throw new CommandException(
 							"Found multiple players named \"" + playerName + "\". Try using a UUID instead.");
